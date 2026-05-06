@@ -73,6 +73,7 @@ async function chat(
       messages,
       temperature: 0.5,
       max_tokens: 120,
+      reasoning_effort: "low",
     }),
   });
 
@@ -80,7 +81,11 @@ async function chat(
 
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || "";
-  const cleaned = raw.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+  const cleaned = raw
+    .replace(/<think>[\s\S]*?<\/think>/g, "")  // strip closed think blocks
+    .replace(/<think>[\s\S]*$/g, "")            // strip unclosed think to end
+    .replace(/^[^a-zA-Zऀ-ॿঀ-৿]*/, "")  // strip leading junk
+    .trim();
   return cleaned || "क्षमा करें, मुझे जवाब नहीं मिला।";
 }
 
