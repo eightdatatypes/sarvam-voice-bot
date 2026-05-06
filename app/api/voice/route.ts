@@ -53,7 +53,8 @@ async function chat(
     `You are a friendly multilingual voice assistant. ` +
     `The user is speaking ${langName}. ` +
     `Reply ONLY in ${langName}. Keep replies to ONE short sentence, max 100 characters, ` +
-    `suitable for being read aloud. Do not mix languages. No markdown, no bullets.`;
+    `suitable for being read aloud. Do not mix languages. No markdown, no bullets. ` +
+    `Do not use <think> tags or show reasoning. Only output the final reply.`;
 
   const messages = [
     { role: "system", content: systemPrompt },
@@ -78,7 +79,9 @@ async function chat(
   if (!res.ok) throw new Error(`Chat failed (${res.status}): ${await res.text()}`);
 
   const data = await res.json();
-  return (data.choices?.[0]?.message?.content || "").trim();
+  const raw = data.choices?.[0]?.message?.content || "";
+  const cleaned = raw.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+  return cleaned || "क्षमा करें, मुझे जवाब नहीं मिला।";
 }
 
 async function synthesize(text: string, lang: string): Promise<Buffer> {
