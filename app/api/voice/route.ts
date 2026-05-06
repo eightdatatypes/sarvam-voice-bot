@@ -81,10 +81,10 @@ async function chat(
 
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || "";
+  console.log("Raw LLM output:", raw);
   const cleaned = raw
-    .replace(/<think>[\s\S]*?<\/think>/g, "")  // strip closed think blocks
-    .replace(/<think>[\s\S]*$/g, "")            // strip unclosed think to end
-    .replace(/^[^a-zA-Zऀ-ॿঀ-৿]*/, "")  // strip leading junk
+    .replace(/<think>[\s\S]*?<\/think>/gi, "")
+    .replace(/<think>[\s\S]*$/gi, "")
     .trim();
   return cleaned || "क्षमा करें, मुझे जवाब नहीं मिला।";
 }
