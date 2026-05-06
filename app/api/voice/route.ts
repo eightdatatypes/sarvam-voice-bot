@@ -93,9 +93,7 @@ async function synthesize(text: string, lang: string): Promise<Buffer> {
       target_language_code: lang,
       model: "bulbul:v3",
       speaker: "anushka",
-      pitch: 0,
       pace: 1.0,
-      loudness: 1.0,
       enable_preprocessing: true,
     }),
   });
