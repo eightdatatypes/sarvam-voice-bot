@@ -17,8 +17,13 @@ const LANG_NAMES: Record<string, string> = {
 };
 
 async function transcribe(audio: Blob, filename: string) {
+  // Sarvam rejects MIME types with codec parameters like "audio/webm;codecs=opus".
+  // Strip everything after the semicolon so we send a clean type they accept.
+  const cleanType = (audio.type || "audio/webm").split(";")[0].trim();
+  const cleanBlob = new Blob([await audio.arrayBuffer()], { type: cleanType });
+
   const fd = new FormData();
-  fd.append("file", audio, filename);
+  fd.append("file", cleanBlob, filename);
   fd.append("model", "saaras:v3");
   fd.append("with_timestamps", "false");
 
