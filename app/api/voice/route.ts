@@ -92,7 +92,7 @@ async function synthesize(text: string, lang: string): Promise<Buffer> {
       text,
       target_language_code: lang,
       model: "bulbul:v3",
-      speaker: "anushka",
+      speaker: "anand",
       pace: 1.0,
       enable_preprocessing: true,
     }),
